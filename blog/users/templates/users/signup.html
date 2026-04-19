@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center my-5">
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm p-4">
+            <h2 class="h3 fw-bold text-center mb-4" style="color: var(--deep-accent);">Create Account</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mb-3">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-amber w-100 mt-3">Submit</button>
+            </form>
+            <p class="text-center mt-3">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+    input {
+        border: 1px solid var(--secondary-text) !important;
+        border-radius: 8px !important;
+        padding: 0.5rem !important;
+    }
+</style>
+{% endblock %}

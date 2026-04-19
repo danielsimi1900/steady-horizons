@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steady Horizons</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-base: #f0fafa;
+            --deep-accent: #004d4d;
+            --secondary-text: #006666;
+            --action-amber: #ff8c00;
+            --white: #ffffff;
+            --teal-main: #008080;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--primary-base);
+            color: var(--secondary-text);
+            line-height: 1.6;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: var(--teal-main);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 77, 77, 0.1);
+        }
+
+        .navbar-brand {
+            color: var(--white) !important;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link {
+            color: var(--white) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--action-amber) !important;
+        }
+
+        /* Headings */
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
+            color: var(--deep-accent);
+            font-weight: 700;
+        }
+
+        /* Eliminate Blue & Set Amber Action Colors */
+        a {
+            color: var(--secondary-text);
+            text-decoration: underline;
+            text-decoration-color: var(--action-amber);
+            transition: all 0.2s ease;
+        }
+
+        a:hover {
+            color: var(--deep-accent);
+            text-decoration-color: var(--deep-accent);
+        }
+
+        .btn-primary, .btn-amber {
+            background-color: var(--action-amber) !important;
+            border-color: var(--action-amber) !important;
+            color: var(--white) !important;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .btn-primary:hover, .btn-amber:hover {
+            background-color: #e67e00 !important;
+            border-color: #e67e00 !important;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-primary {
+            color: var(--teal-main) !important;
+            border-color: var(--teal-main) !important;
+            font-weight: 600;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--teal-main) !important;
+            color: var(--white) !important;
+        }
+
+        /* Card Styling */
+        .card {
+            border: 1px solid var(--teal-main);
+            border-radius: 12px;
+            background-color: var(--white);
+            box-shadow: 0 4px 15px rgba(0, 128, 128, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 128, 128, 0.12);
+        }
+
+        .badge {
+            font-weight: 600;
+            padding: 0.5em 0.8em;
+        }
+
+        .bg-amber {
+            background-color: var(--action-amber) !important;
+            color: var(--white) !important;
+        }
+
+        /* Form Controls */
+        .form-control:focus {
+            border-color: var(--action-amber);
+            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25);
+        }
+
+        /* Eliminate Blue focus shadow on buttons */
+        .btn:focus, .btn:active:focus {
+            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25) !important;
+            outline: none !important;
+        }
+
+        footer {
+            background-color: var(--deep-accent);
+            color: var(--white);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'post_list' %}">STEADY HORIZONS</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'post_list' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item d-flex align-items-center">
+                        <span class="navbar-text me-3" style="color: var(--white) !important; font-weight: 500; cursor: default;">Hello, {{ user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'post_create' %}">Create</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">My Wall</a>
+                    </li>
+                    <li class="nav-item d-flex align-items-center">
+                        <form action="{% url 'logout' %}" method="post" class="d-inline" style="margin: 0;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link border-0 bg-transparent p-0 m-0" style="color: var(--white); font-size: 1rem; font-weight: 500; cursor: pointer; transition: color 0.3s ease;">Logout</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login / Signup</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <script>
+                    // Add hover effect to the logout button to match nav-link color transition
+                    const logoutBtn = document.querySelector('form button[type="submit"]');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('mouseover', function() {
+                            this.style.color = 'var(--action-amber)';
+                        });
+                        logoutBtn.addEventListener('mouseout', function() {
+                            this.style.color = 'var(--white)';
+                        });
+                    }
+                </script>
+                <form class="d-flex" action="{% url 'search_results' %}" method="get">
+                    <input class="form-control me-2 border-0 shadow-sm" type="search" name="q" placeholder="Search insights..." aria-label="Search">
+                    <button class="btn btn-amber px-4" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    {% block header %}
+    {% endblock %}
+
+    <div class="container pb-5">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer class="py-5 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2026 Steady Horizons</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

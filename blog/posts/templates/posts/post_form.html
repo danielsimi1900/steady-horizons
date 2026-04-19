@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h2 class="mb-4">Create New Thought</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">{{ form.title.label }}</label>
+                    {{ form.title }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{{ form.content.label }}</label>
+                    {{ form.content }}
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{{ form.post_type.label }}</label>
+                    {{ form.post_type }}
+                </div>
+                
+                <div id="recipe-fields" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">{{ form.carbs_per_serving.label }}</label>
+                            {{ form.carbs_per_serving }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">{{ form.fiber.label }}</label>
+                            {{ form.fiber }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">{{ form.glycemic_index.label }}</label>
+                            {{ form.glycemic_index }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-amber px-4">Post Thought</button>
+                    <a href="{% url 'post_list' %}" class="btn btn-outline-primary ms-2">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const postTypeSelect = document.querySelector('select[name="post_type"]');
+    const recipeFields = document.getElementById('recipe-fields');
+
+    function toggleRecipeFields() {
+        if (postTypeSelect.value === 'RECIPE') {
+            recipeFields.style.display = 'block';
+        } else {
+            recipeFields.style.display = 'none';
+        }
+    }
+
+    postTypeSelect.addEventListener('change', toggleRecipeFields);
+    toggleRecipeFields(); // Initial check
+</script>
+{% endblock %}
