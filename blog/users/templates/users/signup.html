@@ -1,33 +1,65 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row justify-content-center my-5">
-    <div class="col-md-6 col-lg-4">
-        <div class="card border-0 shadow-sm p-4">
-            <h2 class="h3 fw-bold text-center mb-4" style="color: var(--deep-accent);">Create Account</h2>
-            <form method="post">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="mb-3">
-                        {{ field.label_tag }}
+<div class="min-h-[60vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-extrabold text-deep tracking-tight">Create Account</h2>
+            <p class="mt-2 text-gray-500">Join Steady Horizons to curate your own personal wall.</p>
+        </div>
+
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <div class="bg-red-50 text-red-800 p-3 rounded-lg text-sm mb-4">
+                {{ form.non_field_errors.0 }}
+            </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="space-y-1">
+                    <label class="block text-sm font-semibold text-gray-700" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                    <div class="relative">
                         {{ field }}
-                        {% if field.help_text %}
-                            <small class="text-muted">{{ field.help_text }}</small>
-                        {% endif %}
                     </div>
-                {% endfor %}
-                <button type="submit" class="btn btn-amber w-100 mt-3">Submit</button>
-            </form>
-            <p class="text-center mt-3">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                    {% if field.help_text %}
+                        <p class="text-xs text-gray-400 mt-1">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="pt-4">
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-amber-500 hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-colors">
+                    Sign Up
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-600">
+                Already have an account? <a href="{% url 'login' %}" class="font-semibold text-teal-main hover:text-amber-500 transition-colors">Login</a>
+            </p>
         </div>
     </div>
 </div>
 
-<style>
-    input {
-        border: 1px solid var(--secondary-text) !important;
-        border-radius: 8px !important;
-        padding: 0.5rem !important;
-    }
-</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"], input[type="email"]');
+        inputs.forEach(input => {
+            input.classList.add('appearance-none', 'block', 'w-full', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'shadow-sm', 'placeholder-gray-400', 'focus:outline-none', 'focus:ring-amber-500', 'focus:border-amber-500', 'sm:text-sm');
+        });
+
+        // Specific styling for Django's auto-generated ul > li for help_text
+        const helpTexts = document.querySelectorAll('ul.helptext');
+        helpTexts.forEach(ul => {
+            ul.classList.add('list-disc', 'list-inside', 'text-xs', 'text-gray-400', 'mt-1', 'pl-1');
+        });
+    });
+</script>
 {% endblock %}

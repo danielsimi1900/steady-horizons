@@ -1,64 +1,107 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-8">
-        <div class="card p-4">
-            <h2 class="mb-4">Create New Thought</h2>
-            <form method="post">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label">{{ form.title.label }}</label>
-                    {{ form.title }}
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">{{ form.content.label }}</label>
-                    {{ form.content }}
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">{{ form.post_type.label }}</label>
-                    {{ form.post_type }}
-                </div>
-                
-                <div id="recipe-fields" style="display: none;">
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">{{ form.carbs_per_serving.label }}</label>
-                            {{ form.carbs_per_serving }}
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">{{ form.fiber.label }}</label>
-                            {{ form.fiber }}
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">{{ form.glycemic_index.label }}</label>
-                            {{ form.glycemic_index }}
-                        </div>
+<div class="max-w-3xl mx-auto my-12">
+    <div class="bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-gray-100">
+        <h2 class="text-3xl font-bold text-deep mb-8 border-b border-gray-100 pb-4">Create New Thought</h2>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <div class="space-y-2">
+                <label class="block text-sm font-semibold text-gray-700">{{ form.title.label }}</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.title.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-sm font-semibold text-gray-700">{{ form.content.label }}</label>
+                {{ form.content }}
+                {% if form.content.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.content.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-sm font-semibold text-gray-700">{{ form.post_type.label }}</label>
+                {{ form.post_type }}
+                {% if form.post_type.errors %}
+                <p class="text-red-500 text-sm mt-1">{{ form.post_type.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div id="recipe-fields" style="display: none;" class="bg-gray-50 p-6 rounded-xl border border-gray-200 mt-6">
+                <h3 class="text-lg font-bold text-deep mb-4">Nutritional Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-gray-700">{{ form.carbs_per_serving.label }}</label>
+                        {{ form.carbs_per_serving }}
+                        {% if form.carbs_per_serving.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.carbs_per_serving.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-gray-700">{{ form.fiber.label }}</label>
+                        {{ form.fiber }}
+                        {% if form.fiber.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.fiber.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-gray-700">{{ form.glycemic_index.label }}</label>
+                        {{ form.glycemic_index }}
+                        {% if form.glycemic_index.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.glycemic_index.errors.0 }}</p>
+                        {% endif %}
                     </div>
                 </div>
+            </div>
 
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-amber px-4">Post Thought</button>
-                    <a href="{% url 'post_list' %}" class="btn btn-outline-primary ms-2">Cancel</a>
-                </div>
-            </form>
-        </div>
+            <div class="pt-6 flex items-center space-x-4">
+                <button type="submit" class="bg-amber-500 text-white font-bold py-2.5 px-6 rounded-lg hover:bg-amber-600 transition-colors shadow-sm">Post Thought</button>
+                <a href="{% url 'post_list' %}" class="text-gray-500 font-semibold hover:text-gray-700 transition-colors px-4 py-2">Cancel</a>
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
-    const postTypeSelect = document.querySelector('select[name="post_type"]');
-    const recipeFields = document.getElementById('recipe-fields');
+    document.addEventListener('DOMContentLoaded', function() {
+        const postTypeSelect = document.querySelector('select[name="post_type"]');
+        const recipeFields = document.getElementById('recipe-fields');
 
-    function toggleRecipeFields() {
-        if (postTypeSelect.value === 'RECIPE') {
-            recipeFields.style.display = 'block';
-        } else {
-            recipeFields.style.display = 'none';
+        // Apply tailwind classes to django form inputs
+        const inputs = document.querySelectorAll('input[type="text"], input[type="number"], select, textarea');
+        inputs.forEach(input => {
+            input.classList.add('w-full', 'px-4', 'py-2.5', 'border', 'border-gray-300', 'rounded-lg', 'focus:ring-2', 'focus:ring-amber-500', 'focus:border-amber-500', 'outline-none', 'transition-all');
+        });
+
+        function toggleRecipeFields() {
+            if (postTypeSelect && postTypeSelect.value === 'RECIPE') {
+                recipeFields.style.display = 'block';
+                // optional animation
+                recipeFields.classList.add('animate-fade-in');
+            } else if (recipeFields) {
+                recipeFields.style.display = 'none';
+            }
         }
-    }
 
-    postTypeSelect.addEventListener('change', toggleRecipeFields);
-    toggleRecipeFields(); // Initial check
+        if (postTypeSelect) {
+            postTypeSelect.addEventListener('change', toggleRecipeFields);
+            toggleRecipeFields(); // Initial check
+        }
+    });
 </script>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+</style>
 {% endblock %}

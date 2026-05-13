@@ -36,16 +36,29 @@ def seed_all():
         }
     ]
 
+    existing_titles = set(Post.objects.filter(
+        title__in=[data['title'] for data in posts_data]
+    ).values_list('title', flat=True))
+
+    new_posts = []
     for data in posts_data:
-        post, created = Post.objects.get_or_create(
-            title=data['title'],
-            defaults=data
-        )
-        if created:
+        if data['title'] in existing_titles:
+            print(f"Post already exists: {data['title']}")
+        else:
+            post = Post(**data)
+            if post.post_type == 'RECIPE':
+                carbs = post.carbs_per_serving or 0
+                fiber = post.fiber or 0
+                post.net_carbs = carbs - fiber
+            else:
+                post.net_carbs = None
+            new_posts.append(post)
+
+    if new_posts:
+        Post.objects.bulk_create(new_posts)
+        for post in new_posts:
             print(f"Created {post.post_type}: {post.title}")
             if post.post_type == 'RECIPE':
                 print(f"  -> Calculated Net Carbs: {post.net_carbs}g")
-        else:
-            print(f"Post already exists: {post.title}")
 
 seed_all()
