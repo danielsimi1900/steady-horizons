@@ -45,19 +45,19 @@ class SavePostViewTest(TestCase):
 
     def test_save_post_authenticated(self):
         self.client.login(username='testuser', password='password123')
-        response = self.client.get(reverse('save_post', kwargs={'pk': self.post.pk}))
+        response = self.client.post(reverse('save_post', kwargs={'pk': self.post.pk}))
         self.assertEqual(SavedPost.objects.count(), 1)
         self.assertRedirects(response, reverse('dashboard'))
 
     def test_remove_post_authenticated(self):
         self.client.login(username='testuser', password='password123')
         SavedPost.objects.create(user=self.user, post=self.post)
-        response = self.client.get(reverse('save_post', kwargs={'pk': self.post.pk}))
+        response = self.client.post(reverse('save_post', kwargs={'pk': self.post.pk}))
         self.assertEqual(SavedPost.objects.count(), 0)
         self.assertRedirects(response, reverse('dashboard'))
 
     def test_save_post_unauthenticated(self):
-        response = self.client.get(reverse('save_post', kwargs={'pk': self.post.pk}))
+        response = self.client.post(reverse('save_post', kwargs={'pk': self.post.pk}))
         self.assertEqual(SavedPost.objects.count(), 0)
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse('login'), response.url)

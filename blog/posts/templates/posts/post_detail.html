@@ -1,123 +1,76 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<style>
-    .nutrition-box {
-        background-color: #FEBA17; /* Bright Amber */
-        background-image: radial-gradient(circle at 2px 2px, rgba(78, 31, 0, 0.05) 1px, transparent 0);
-        background-size: 20px 20px;
-        color: var(--deep-accent);
-        border: 2px dashed var(--deep-accent);
-        border-radius: 12px;
-        padding: 2rem;
-        margin-bottom: 3rem;
-    }
-    .nutrition-item {
-        text-align: center;
-        padding: 0 1rem;
-    }
-    .nutrition-label {
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: var(--deep-accent);
-        opacity: 0.8;
-    }
-    .nutrition-value {
-        font-size: 2.2rem;
-        font-weight: 800;
-        line-height: 1;
-    }
-    .nutrition-divider {
-        width: 2px;
-        background: var(--deep-accent);
-        height: 50px;
-        opacity: 0.2;
-    }
+<div class="max-w-4xl mx-auto my-12">
+    <article class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100 relative overflow-hidden">
+        <!-- Background decorative element -->
+        <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-teal-main opacity-5 pointer-events-none"></div>
 
-    /* Article Specific Interiors */
-    .article-body {
-        font-size: 1.15rem;
-        line-height: 1.8;
-    }
+        <header class="mb-10 text-center relative z-10">
+            <div class="mb-4">
+                <span class="inline-block bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    {% if post.post_type == 'RECIPE' %}Recipe{% else %}Medical Discovery{% endif %}
+                </span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold text-deep mb-4 leading-tight">{{ post.title }}</h1>
+            <div class="text-gray-500 font-medium text-sm flex items-center justify-center space-x-2">
+                <span>Published on {{ post.created_at|date:"F j, Y" }}</span>
+            </div>
+        </header>
 
-    .discovery-note {
-        border-left: 5px solid var(--action-amber);
-        padding: 1.5rem;
-        background-color: var(--white);
-        border-radius: 0 12px 12px 0;
-        box-shadow: 2px 2px 10px rgba(78, 31, 0, 0.03);
-    }
-</style>
+        {% if post.post_type == 'RECIPE' %}
+        <div class="bg-amber-400 p-8 rounded-2xl mb-10 border-2 border-dashed border-deep/20 relative overflow-hidden" style="background-image: radial-gradient(circle at 2px 2px, rgba(78, 31, 0, 0.05) 1px, transparent 0); background-size: 20px 20px;">
+            <div class="flex justify-between items-center mb-6 relative z-10">
+                <h3 class="text-xl font-bold text-deep m-0">Nutritional Profile</h3>
+                <span class="bg-white text-deep font-bold px-4 py-1 rounded-full border border-deep/20 text-sm shadow-sm">GI: {{ post.glycemic_index|default:"--" }}</span>
+            </div>
 
-<div class="row justify-content-center">
-    <div class="col-lg-8">
-        <article class="bg-white p-5 rounded-4 shadow-sm my-5 border">
-            <header class="mb-5 border-bottom pb-4 text-center">
-                <div class="mb-3">
-                    {% if post.post_type == 'RECIPE' %}
-                        <span class="badge bg-amber">Recipe</span>
-                    {% else %}
-                        <span class="badge bg-amber">Medical Discovery</span>
-                    {% endif %}
+            <div class="grid grid-cols-3 gap-4 text-center relative z-10">
+                <div class="flex flex-col items-center justify-center p-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-deep/80 mb-2">Total Carbs</span>
+                    <div class="text-4xl font-extrabold text-deep flex items-baseline">{{ post.carbs_per_serving|default:"0" }}<span class="text-lg font-medium ml-1">g</span></div>
                 </div>
-                <h1 class="display-4 fw-bold mb-3">{{ post.title }}</h1>
-                <div class="text-muted">
-                    <span>Published on {{ post.created_at|date:"F j, Y" }}</span>
-                </div>
-            </header>
 
-            {% if post.post_type == 'RECIPE' %}
-            <div class="nutrition-box">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3 class="h5 fw-bold mb-0">Nutritional Profile</h3>
-                    <span class="badge bg-white text-dark border border-dark px-3 py-2 rounded-pill">GI: {{ post.glycemic_index|default:"--" }}</span>
+                <div class="flex flex-col items-center justify-center p-2 border-l border-r border-deep/10">
+                    <span class="text-xs font-bold uppercase tracking-wider text-deep/80 mb-2">Fiber</span>
+                    <div class="text-4xl font-extrabold text-deep flex items-baseline">{{ post.fiber|default:"0" }}<span class="text-lg font-medium ml-1">g</span></div>
                 </div>
-                <div class="d-flex justify-content-around align-items-center">
-                    <div class="nutrition-item">
-                        <div class="nutrition-label">Total Carbs</div>
-                        <div class="nutrition-value">{{ post.carbs_per_serving|default:"0" }}<small class="fs-6 fw-normal">g</small></div>
-                    </div>
-                    <div class="nutrition-divider"></div>
-                    <div class="nutrition-item">
-                        <div class="nutrition-label">Fiber</div>
-                        <div class="nutrition-value">{{ post.fiber|default:"0" }}<small class="fs-6 fw-normal">g</small></div>
-                    </div>
-                    <div class="nutrition-divider"></div>
-                    <div class="nutrition-item">
-                        <div class="nutrition-label text-danger">Net Carbs</div>
-                        <div class="nutrition-value">{{ post.net_carbs|default:"0" }}<small class="fs-6 fw-normal">g</small></div>
-                    </div>
+
+                <div class="flex flex-col items-center justify-center p-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-red-700 mb-2">Net Carbs</span>
+                    <div class="text-4xl font-extrabold text-deep flex items-baseline">{{ post.net_carbs|default:"0" }}<span class="text-lg font-medium ml-1">g</span></div>
                 </div>
             </div>
-            {% endif %}
+        </div>
+        {% endif %}
+
+        <section class="prose prose-lg max-w-none text-gray-700 mb-10 relative z-10 {% if post.post_type == 'DISCOVERY' %}pl-6 border-l-4 border-amber-500 bg-gray-50/50 p-6 rounded-r-2xl shadow-inner{% endif %}">
+            {{ post.content|linebreaks }}
+        </section>
+
+        <footer class="pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 relative z-10">
+            <a href="{% url 'post_list' %}" class="inline-flex items-center text-teal-main font-semibold hover:text-amber-500 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Back to all insights
+            </a>
             
-            <section class="article-body mb-5 {% if post.post_type == 'DISCOVERY' %}discovery-note{% endif %}">
-                {{ post.content|linebreaks }}
-            </section>
-            
-            <footer class="pt-4 border-top d-flex justify-content-between align-items-center">
-                <a href="{% url 'post_list' %}" class="btn btn-sm btn-amber rounded-pill">
-                    &larr; Back to all insights
-                </a>
-                
-                {% if user.is_authenticated %}
-                <a href="{% url 'save_post' pk=post.pk %}" class="btn btn-sm btn-amber rounded-pill">
+            {% if user.is_authenticated %}
+            <form action="{% url 'save_post' pk=post.pk %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="inline-block bg-amber-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-amber-600 transition-colors shadow-sm hover:shadow-md">
                     {% if is_saved %}
                         Remove from My Wall
                     {% else %}
                         Save to My Wall
                     {% endif %}
-                </a>
-                {% else %}
-                <a href="{% url 'signup' %}" class="btn btn-sm btn-amber rounded-pill" title="Join Steady Horizons to curate your own personal recipe wall.">
-                    Save to My Wall
-                </a>
-                {% endif %}
-            </footer>
-        </article>
-    </div>
+                </button>
+            </form>
+            {% else %}
+            <a href="{% url 'signup' %}" class="inline-block bg-amber-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-amber-600 transition-colors shadow-sm hover:shadow-md" title="Join Steady Horizons to curate your own personal recipe wall.">
+                Save to My Wall
+            </a>
+            {% endif %}
+        </footer>
+    </article>
 </div>
 {% endblock %}
