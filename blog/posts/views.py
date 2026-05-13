@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
@@ -46,6 +47,7 @@ class PostDetailView(DetailView):
         return context
 
 @login_required
+@require_POST
 def save_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     saved_post, created = SavedPost.objects.get_or_create(user=request.user, post=post)
