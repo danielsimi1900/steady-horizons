@@ -83,3 +83,54 @@ class DashboardViewTest(TestCase):
         response = self.client.get(reverse('dashboard'))
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse('login'), response.url)
+
+class PostCreateViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.url = reverse('post_create')
+
+    def test_unauthenticated_access(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse('login'), response.url)
+
+    def test_authenticated_get(self):
+        self.client.login(username='testuser', password='password123')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'posts/post_form.html')
+
+    def test_valid_post_submission(self):
+        self.client.login(username='testuser', password='password123')
+        data = {
+            'title': 'Test Recipe',
+            'content': 'Test recipe content',
+            'post_type': 'RECIPE',
+            'carbs_per_serving': '10.5',
+            'fiber': '3.0',
+            'glycemic_index': 'Low'
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(Post.objects.count(), 1)
+        post = Post.objects.first()
+        self.assertEqual(post.title, 'Test Recipe')
+        self.assertEqual(float(post.net_carbs), 7.5)  # 10.5 - 3.0
+        self.assertRedirects(response, reverse('post_list'))
+
+        # Test success message
+        from django.contrib.messages import get_messages
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), "Your thought has been posted!")
+
+    def test_invalid_post_submission(self):
+        self.client.login(username='testuser', password='password123')
+        data = {
+            'title': '',  # Missing title
+            'content': 'Test content',
+            'post_type': 'DISCOVERY'
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(Post.objects.count(), 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response.context['form'], 'title', 'This field is required.')
