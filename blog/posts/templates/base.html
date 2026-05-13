@@ -3,217 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steady Horizons</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Steady Horizons - T1D Life & Science</title>
+    <meta name="description" content="Recipes and Research for the Type 1 Community. Discover low-carb meals, medical news, and the latest in CGM technology.">
+    <meta name="keywords" content="Type 1 Diabetes, T1D, Low-carb Recipes, CGM, Medical News">
+
+    <!-- Open Graph tags for SEO -->
+    <meta property="og:title" content="Steady Horizons - T1D Life & Science">
+    <meta property="og:description" content="Recipes and Research for the Type 1 Community.">
+    <meta property="og:type" content="website">
+
     <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-base: #f0fafa;
-            --deep-accent: #004d4d;
-            --secondary-text: #006666;
-            --action-amber: #ff8c00;
-            --white: #ffffff;
-            --teal-main: #008080;
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--primary-base);
-            color: var(--secondary-text);
-            line-height: 1.6;
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#f0fafa',
+                        deep: '#004d4d',
+                        secondary: '#006666',
+                        amber: {
+                            500: '#ff8c00',
+                            600: '#e67e00',
+                        },
+                        teal: {
+                            main: '#008080',
+                        }
+                    },
+                }
+            }
         }
-
-        /* Navbar Styling */
-        .navbar {
-            background-color: var(--teal-main);
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0, 77, 77, 0.1);
-        }
-
-        .navbar-brand {
-            color: var(--white) !important;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-link {
-            color: var(--white) !important;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--action-amber) !important;
-        }
-
-        /* Headings */
-        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3 {
-            color: var(--deep-accent);
-            font-weight: 700;
-        }
-
-        /* Eliminate Blue & Set Amber Action Colors */
-        a {
-            color: var(--secondary-text);
-            text-decoration: underline;
-            text-decoration-color: var(--action-amber);
-            transition: all 0.2s ease;
-        }
-
-        a:hover {
-            color: var(--deep-accent);
-            text-decoration-color: var(--deep-accent);
-        }
-
-        .btn-primary, .btn-amber {
-            background-color: var(--action-amber) !important;
-            border-color: var(--action-amber) !important;
-            color: var(--white) !important;
-            font-weight: 600;
-            border-radius: 8px;
-        }
-
-        .btn-primary:hover, .btn-amber:hover {
-            background-color: #e67e00 !important;
-            border-color: #e67e00 !important;
-            transform: translateY(-1px);
-        }
-
-        .btn-outline-primary {
-            color: var(--teal-main) !important;
-            border-color: var(--teal-main) !important;
-            font-weight: 600;
-        }
-
-        .btn-outline-primary:hover {
-            background-color: var(--teal-main) !important;
-            color: var(--white) !important;
-        }
-
-        /* Card Styling */
-        .card {
-            border: 1px solid var(--teal-main);
-            border-radius: 12px;
-            background-color: var(--white);
-            box-shadow: 0 4px 15px rgba(0, 128, 128, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 128, 128, 0.12);
-        }
-
-        .badge {
-            font-weight: 600;
-            padding: 0.5em 0.8em;
-        }
-
-        .bg-amber {
-            background-color: var(--action-amber) !important;
-            color: var(--white) !important;
-        }
-
-        /* Form Controls */
-        .form-control:focus {
-            border-color: var(--action-amber);
-            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25);
-        }
-
-        /* Eliminate Blue focus shadow on buttons */
-        .btn:focus, .btn:active:focus {
-            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25) !important;
-            outline: none !important;
-        }
-
-        footer {
-            background-color: var(--deep-accent);
-            color: var(--white);
-        }
-    </style>
+    </script>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'post_list' %}">STEADY HORIZONS</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'post_list' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
-                    </li>
+<body class="font-sans bg-primary text-secondary min-h-screen flex flex-col">
+    <header>
+        <nav class="bg-teal-main shadow-md py-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <div class="flex items-center space-x-6">
+                    <a href="{% url 'post_list' %}" class="text-white font-bold tracking-wide text-lg hover:text-amber-500 transition-colors duration-300">STEADY HORIZONS</a>
+                    <div class="hidden md:flex space-x-4">
+                        <a href="{% url 'post_list' %}" class="text-white font-medium hover:text-amber-500 transition-colors duration-300">Home</a>
+                        <a href="{% url 'contact' %}" class="text-white font-medium hover:text-amber-500 transition-colors duration-300">Contact</a>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4">
+                    <form action="{% url 'search_results' %}" method="get" class="flex">
+                        <input type="search" name="q" placeholder="Search insights..." aria-label="Search" class="rounded-l-md border-0 px-4 py-2 text-gray-900 focus:ring-amber-500 focus:border-amber-500 outline-none">
+                        <button type="submit" class="bg-amber-500 text-white px-4 py-2 rounded-r-md font-semibold hover:bg-amber-600 transition-colors duration-300">Search</button>
+                    </form>
+
                     {% if user.is_authenticated %}
-                    <li class="nav-item d-flex align-items-center">
-                        <span class="navbar-text me-3" style="color: var(--white) !important; font-weight: 500; cursor: default;">Hello, {{ user.username }}</span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'post_create' %}">Create</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">My Wall</a>
-                    </li>
-                    <li class="nav-item d-flex align-items-center">
-                        <form action="{% url 'logout' %}" method="post" class="d-inline" style="margin: 0;">
+                        <span class="text-white font-medium cursor-default">Hello, {{ user.username }}</span>
+                        <a href="{% url 'post_create' %}" class="text-white font-medium hover:text-amber-500 transition-colors duration-300">Create</a>
+                        <a href="{% url 'dashboard' %}" class="text-white font-medium hover:text-amber-500 transition-colors duration-300">My Wall</a>
+                        <form action="{% url 'logout' %}" method="post" class="inline">
                             {% csrf_token %}
-                            <button type="submit" class="nav-link border-0 bg-transparent p-0 m-0" style="color: var(--white); font-size: 1rem; font-weight: 500; cursor: pointer; transition: color 0.3s ease;">Logout</button>
+                            <button type="submit" class="text-white font-medium hover:text-amber-500 transition-colors duration-300 bg-transparent border-0 cursor-pointer">Logout</button>
                         </form>
-                    </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Login / Signup</a>
-                    </li>
+                        <a href="{% url 'login' %}" class="text-white font-medium hover:text-amber-500 transition-colors duration-300">Login / Signup</a>
                     {% endif %}
-                </ul>
-                <script>
-                    // Add hover effect to the logout button to match nav-link color transition
-                    const logoutBtn = document.querySelector('form button[type="submit"]');
-                    if (logoutBtn) {
-                        logoutBtn.addEventListener('mouseover', function() {
-                            this.style.color = 'var(--action-amber)';
-                        });
-                        logoutBtn.addEventListener('mouseout', function() {
-                            this.style.color = 'var(--white)';
-                        });
-                    }
-                </script>
-                <form class="d-flex" action="{% url 'search_results' %}" method="get">
-                    <input class="form-control me-2 border-0 shadow-sm" type="search" name="q" placeholder="Search insights..." aria-label="Search">
-                    <button class="btn btn-amber px-4" type="submit">Search</button>
-                </form>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
     {% block header %}
     {% endblock %}
 
-    <div class="container pb-5">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
         {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
+            <div class="space-y-4 mb-6">
+                {% for message in messages %}
+                    <div class="p-4 rounded-md {% if message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200{% elif message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
 
         {% block content %}
         {% endblock %}
-    </div>
+    </main>
 
-    <footer class="py-5 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2026 Steady Horizons</p>
+    <footer class="bg-deep text-white py-10 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="mb-0 text-gray-300">&copy; 2026 Steady Horizons</p>
         </div>
     </footer>
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
