@@ -28,15 +28,25 @@ def seed_data():
         }
     ]
 
+    existing_titles = set(Post.objects.filter(
+        title__in=[r['title'] for r in recipes]
+    ).values_list('title', flat=True))
+
+    new_posts = []
     for data in recipes:
-        post, created = Post.objects.get_or_create(
-            title=data['title'],
-            defaults=data
-        )
-        if created:
-            print(f"Created recipe: {post.title}")
+        if data['title'] not in existing_titles:
+            # calculate net_carbs explicitly since bulk_create bypasses save()
+            if data.get('post_type', 'DISCOVERY') == 'RECIPE':
+                carbs = data.get('carbs_per_serving') or 0
+                fiber = data.get('fiber') or 0
+                data['net_carbs'] = carbs - fiber
+            new_posts.append(Post(**data))
+            print(f"Created recipe: {data['title']}")
         else:
-            print(f"Recipe already exists: {post.title}")
+            print(f"Recipe already exists: {data['title']}")
+
+    if new_posts:
+        Post.objects.bulk_create(new_posts)
 
 if __name__ == "__main__":
     seed_data()
